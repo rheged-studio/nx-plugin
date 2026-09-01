@@ -1,0 +1,15 @@
+{
+  "reviewBots": ["claude", "cursor", "coderabbitai"],
+  "maxCiRounds": 5,
+  "replyOnAccept": true,
+  "promoteOnGreen": true,
+  "deferNonBlocking": true,
+  "humanEnvelope": true,
+  "reviewIdleMinutes": 5,
+  "reviewWaitMaxMinutes": 20,
+  "linearTeamName": "Rheged Studio",
+  "issueKeys": ["A"],
+  "followUpLabel": "",
+  "followUpProject": "Follow-up issues",
+  "followUpState": "Backlog"
+}
