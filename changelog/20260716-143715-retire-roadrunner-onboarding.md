@@ -1,7 +1,7 @@
 ---
 title: Retire per-repo road-runner-bot onboarding from the template runbooks
 release_note: Newly-generated repos no longer need to install road-runner-bot or grant ROADRUNNER_* access — both are provisioned org-wide; only matrix.repo registration remains.
-version:
+version: 0.0.0
 created_at: "2026-07-16T14:37:15Z"
 merged_at:
 branch: a-991-docs-retire-per-repo-road-runner-bot-onboarding-from

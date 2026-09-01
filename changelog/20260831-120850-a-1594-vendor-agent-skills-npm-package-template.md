@@ -1,13 +1,13 @@
 ---
 title: Vendor agent-skills skills (triage-pr 0.13.0)
 release_note: ""
-version:
+version: 0.0.0
 created_at: "2026-08-31T12:08:50Z"
 merged_at:
 branch: a-1594-vendor-agent-skills-npm-package-template
 pr:
 commit:
-author: "rob@rheged.studio"
+author: rob@rheged.studio
 co_authors: []
 category: chore
 breaking: false

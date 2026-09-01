@@ -1,8 +1,8 @@
 ---
 title: Refresh AGENTS.md to Rheged Studio canonical
-release_note: ''
+release_note: ""
 created_at: "2026-08-07T14:13:42Z"
-merged_at: ''
+merged_at: ""
 branch: a-1325-npm-package-template-refresh-agentsmd-to-rheged-studio
 pr:
 commit:
@@ -17,6 +17,7 @@ stats:
   loc_added:
   loc_removed:
   commits:
+version: 0.0.0
 ---
 
 ## Changed

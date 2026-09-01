@@ -1,17 +1,18 @@
 ---
-title: "Add commitlint pre-push range check"
+title: Add commitlint pre-push range check
 release_note:
-version:
+version: 0.0.0
 created_at: "2026-07-23T14:33:42Z"
 merged_at:
-branch: "a-1021-tier-1-fan-out-commitlint-pre-push-to-package-templates"
+branch: a-1021-tier-1-fan-out-commitlint-pre-push-to-package-templates
 pr:
 commit:
-author: "rob@acmeskunkworks.io"
+author: rob@acmeskunkworks.io
 co_authors: []
 category: chore
 breaking: false
-issues: ["A-1021"]
+issues:
+  - A-1021
 stats:
   files_changed:
   loc_added:

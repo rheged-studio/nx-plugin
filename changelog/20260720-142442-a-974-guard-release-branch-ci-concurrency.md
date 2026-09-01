@@ -1,7 +1,7 @@
 ---
 title: Guard release-branch CI concurrency against GO/NO GO cancellation
 release_note:
-version:
+version: 0.0.0
 created_at: "2026-07-20T14:24:42Z"
 merged_at:
 branch: a-974-guard-release-branch-ci-concurrency

@@ -1,17 +1,18 @@
 ---
-title: "Harden bootstrap publish + GO/NO GO road-runner-bot bypass"
+title: Harden bootstrap publish + GO/NO GO road-runner-bot bypass
 release_note:
-version:
+version: 0.0.0
 created_at: "2026-07-31T10:53:51Z"
 merged_at:
-branch: "a-1019-harden-parent-package-templates-so-the-release-bootstrap"
+branch: a-1019-harden-parent-package-templates-so-the-release-bootstrap
 pr:
 commit:
-author: "rob@acmeskunkworks.io"
+author: rob@acmeskunkworks.io
 co_authors: []
 category: fix
 breaking: false
-issues: ["A-1019"]
+issues:
+  - A-1019
 stats:
   files_changed:
   loc_added:
