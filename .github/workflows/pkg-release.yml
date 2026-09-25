@@ -14,10 +14,13 @@
 # subject to repository + workflow filename, so a generated repo configures its
 # Trusted Publisher against `pkg-release.yml` (see README.md, "npm OIDC").
 #
-# DISABLED on this template repo (`gh workflow disable Release`): the template's
-# src/ is a placeholder that is never published, so a live publish would fail on
-# every push to main. A generated repo re-enables it (`gh workflow enable Release`)
-# — see the generation checklist in CLAUDE.md.
+# DORMANT until npm bootstrap. This package has no Trusted Publisher and must
+# not publish. Prefer `gh workflow disable Release`; this token cannot toggle
+# Actions workflows (403), so the jobs below are also gated `if: ${{ false }}`
+# so a still-active toggle cannot publish or stamp version 0.0.0. Changelog
+# notes run through `.github/workflows/changelog-enrich.yml` (`mode: enrich`)
+# instead. To turn npm on: remove the three `if:` gates, `gh workflow enable
+# Release`, add Clacks `matrix.repo`, then bootstrap OIDC.
 name: Release
 
 on:
@@ -46,11 +49,13 @@ jobs:
   # package that changes npmScope / nodeVersionFile / the registry URLs in
   # repo-config.yaml has them flow through here without editing this workflow.
   config:
+    if: ${{ false }}
     uses: rheged-studio/shared-workflows/.github/workflows/reusable-load-repo-config.yml@v1
     permissions:
       contents: read
 
   release:
+    if: ${{ false }}
     needs: config
     uses: rheged-studio/shared-workflows/.github/workflows/reusable-pkg-release.yml@v1
     with:
@@ -75,9 +80,10 @@ jobs:
   # secrets: inherit passes ROADRUNNER_PRIVATE_KEY for the App-token write-back.
   # Runs independently of `release` — both read the bumped version from the
   # committed package.json; no publish artifact is needed.
-  # Dormant on this template while Release is disabled; generated packages
-  # inherit the job when they enable Release.
+  # Gated off while npm is deferred — `mode: finalise` would stamp 0.0.0.
+  # Live enrich is `.github/workflows/changelog-enrich.yml` (`mode: enrich`).
   changelog-enrich:
+    if: ${{ false }}
     uses: rheged-studio/shared-workflows/.github/workflows/reusable-changelog-enrich.yml@v1
     with:
       mode: finalise

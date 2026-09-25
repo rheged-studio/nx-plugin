@@ -1,0 +1,30 @@
+name: Changelog enrich
+
+# Post-merge dated-changelog enrich without npm publish (deploy-target path,
+# A-800 / A-821). `mode: enrich` fills merged_at/pr/commit/stats and does **not**
+# stamp `version` — `pkg-release.yml`'s `mode: finalise` job would stamp the
+# untagged 0.0.0 onto every entry. Never pull_request_target. App-token
+# write-back requires secrets: inherit (ROADRUNNER_PRIVATE_KEY).
+#
+# When npm publish is enabled: delete this workflow (pkg-release.yml already
+# carries `mode: finalise`) so the two do not double-run.
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: changelog-enrich-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  changelog-enrich:
+    uses: rheged-studio/shared-workflows/.github/workflows/reusable-changelog-enrich.yml@v1
+    with:
+      mode: enrich
+    permissions:
+      contents: read
+      pull-requests: read
+    secrets: inherit
