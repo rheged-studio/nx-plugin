@@ -16,9 +16,10 @@ Standalone home for `@rheged-studio/nx-plugin` — the estate Nx plugin
 `src/index.ts` when the generators land.
 
 **npm publish is deferred.** `pkg-release.yml` (workflow name `Release`) stays
-off — its jobs are also gated `if: ${{ false }}` so a still-active Actions
-toggle cannot publish. Do **not** add this repo to Clacks `matrix.repo` until
-the first Trusted Publisher bootstrap.
+off — its jobs are also gated on repository variable `ENABLE_NPM_PUBLISH`
+(unset ≠ `'true'`) so a still-active Actions toggle cannot publish. Do **not**
+add this repo to Clacks `matrix.repo` until the first Trusted Publisher
+bootstrap.
 
 **Changelog notes without npm.** `.github/workflows/changelog-enrich.yml` calls
 `reusable-changelog-enrich.yml` with `mode: enrich` (the deploy-target path).
@@ -249,7 +250,7 @@ Two-stage lifecycle — post-merge enrichment runs in-repo via
 
 ## Release workflow
 
-> **Dormant until npm bootstrap.** This package is not published. `pkg-release.yml` jobs are gated `if: ${{ false }}` (and should also be disabled with `gh workflow disable Release`) so a push to `main` cannot publish or open a failure issue. The file stays in the tree so Trusted Publishing can later bind to this filename. Changelog notes use `.github/workflows/changelog-enrich.yml` instead. Everything below describes the workflow **as it will run once npm is enabled**.
+> **Dormant until npm bootstrap.** This package is not published. `pkg-release.yml` jobs are gated on repository variable `ENABLE_NPM_PUBLISH` (and should also be disabled with `gh workflow disable Release`) so a push to `main` cannot publish or open a failure issue. The file stays in the tree so Trusted Publishing can later bind to this filename. Changelog notes use `.github/workflows/changelog-enrich.yml` instead. Everything below describes the workflow **as it will run once npm is enabled**.
 >
 > **Thin caller (A-639).** The release workflow is `.github/workflows/pkg-release.yml` — a thin caller of the estate's shared `reusable-pkg-release.yml`. A `config` job loads `infrastructure/repo-config.yaml` and passes `npm-scope` / `node-version-file` / the registry URLs to the reusable workflow. The file is `pkg-release.yml` (npm Trusted Publishing binds its OIDC subject to repository + workflow **filename**), but the workflow **name** stays `Release` so `gh workflow enable/disable Release` still works.
 
