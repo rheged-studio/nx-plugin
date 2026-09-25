@@ -1,21 +1,22 @@
 ---
-title: "Vendor estate skill catalogue (Matt packs + rheged-skills-setup)"
-release_note: "Agent skills now include the full Rheged and Matt Pocock catalogue; legacy initialise-skills removed."
+title: Vendor estate skill catalogue (Matt packs + rheged-skills-setup)
+release_note: Agent skills now include the full Rheged and Matt Pocock catalogue; legacy initialise-skills removed.
 created_at: "2026-09-25T14:45:00Z"
-merged_at:
+merged_at: "2026-09-25T14:54:07Z"
 branch: a-1923-vendor-estate-skill-catalogue-nx-plugin
-pr:
-commit:
-author: "rob@rheged.studio"
+pr: 9
+commit: d7d85da
+author: rob@rheged.studio
 co_authors: []
 category: chore
 breaking: false
-issues: ["A-1923"]
+issues:
+  - A-1923
 affected_packages: []
 stats:
-  files_changed:
-  loc_added:
-  loc_removed:
+  files_changed: 220
+  loc_added: 8197
+  loc_removed: 350
   commits:
 ---
 
