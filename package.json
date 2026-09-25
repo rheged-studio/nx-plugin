@@ -1,20 +1,22 @@
 {
-  "name": "@rheged-studio/npm-package-template",
+  "name": "@rheged-studio/nx-plugin",
   "version": "0.0.0",
-  "description": "Template repository for Rheged Studio npm packages — rename and fill src/ when generating a new package.",
+  "description": "Estate Nx plugin (@rheged-studio/nx-plugin) — generators-first hybrid UI/util scaffolding",
   "keywords": [
-    "template",
-    "npm-package",
+    "nx",
+    "nx-plugin",
+    "generators",
+    "scaffolding",
     "typescript",
-    "boilerplate"
+    "monorepo"
   ],
-  "homepage": "https://github.com/rheged-studio/npm-package-template#readme",
+  "homepage": "https://github.com/rheged-studio/nx-plugin#readme",
   "bugs": {
-    "url": "https://github.com/rheged-studio/npm-package-template/issues"
+    "url": "https://github.com/rheged-studio/nx-plugin/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rheged-studio/npm-package-template.git"
+    "url": "https://github.com/rheged-studio/nx-plugin.git"
   },
   "license": "MIT",
   "author": {

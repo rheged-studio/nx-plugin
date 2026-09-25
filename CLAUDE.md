@@ -10,41 +10,31 @@ repo-specific guidance follows below.
 
 ## Repo
 
-Template repository for Rheged Studio npm packages. It ships a minimal, buildable pnpm + TypeScript ESM skeleton plus the shared workflow/release shell, so a new package can be generated and released without rebuilding the infrastructure each time.
+Standalone home for `@rheged-studio/nx-plugin` — the estate Nx plugin
+(generators-first hybrid UI/util scaffolding). Spawned from
+`npm-package-template`. `src/` is still the placeholder API; replace
+`src/index.ts` when the generators land.
 
-The one-time org/repo settings that stand this up as a GitHub Template repository — and the settings every spawned repo inherits (Template flag, `GO/NO GO` ruleset, npm OIDC, `npm-release` environment, orchestrator onboarding, Claude review) — live in the [Setup section of the README](README.md#setup), the single source of truth for the non-copied setup. The list below covers the per-package code edits inside a generated repo, plus the non-copied repo/org steps (each cross-links its README subsection rather than duplicating the detail).
+**npm publish is deferred.** `pkg-release.yml` (workflow name `Release`) stays
+off — its jobs are also gated on repository variable `ENABLE_NPM_PUBLISH`
+(unset ≠ `'true'`) so a still-active Actions toggle cannot publish. Do **not**
+add this repo to Clacks `matrix.repo` until the first Trusted Publisher
+bootstrap.
 
-When generating a package from this template, **run the `initialise-package-repo` skill** in the new repo (see "## Agent skills" below, and A-663). It drives the whole post-generation checklist below in one idempotent, dry-run-first pass — so the individual steps here are the _reference_ for what it does, not a manual walk you have to perform by hand. The one thing it deliberately leaves to you is authoring the real `src/` API.
-
-The skill **automates**:
-
-- **Renames the `package.json` identity** — `name` (placeholder `@rheged-studio/npm-package-template`), `description`, `keywords`, `repository`, `homepage`, `bugs` — deriving name/URLs from `gh repo view` and prompting for `description`/`keywords`.
-- **Re-seeds `.release-please-manifest.json`** so `"."` matches the new package's starting `package.json` version (the template ships `"0.0.0"`). Leaving it stale is the #1 release-please failure mode. `release-please-config.json` itself needs no edit.
-- **Resets `changelog/` to just its `README.md`.** The template dogfoods its own changelog process, so `changelog/` accumulates dated entries documenting the _template's own_ development. "Use this template" copies them into the generated repo, where they are unrelated noise — and because they are version-less, the post-merge enricher would stamp the new package's first version onto them and sweep them into its first release notes (it stamps _every_ version-less entry, not just the current PR's). The skill deletes every dated entry, keeping only `README.md`; the template's entries are preserved in its own git history, and the repo's own first real entry is written by `/send-it`.
-- **Points `infrastructure/repo-config.yaml`** at the new package (scope, default branch) where values differ, preserving comments.
-- **Pulls the shared skills** via `npx skills add … --copy` from `rheged-studio/agent-skills` for the locked set (both Claude Code and Cursor trees) — pull-on-instantiation (A-776). Committed copies in the template are bootstrap only; the repo-local `initialise-package-repo` scaffolder is never overwritten.
-- **Clears the template-seed skill-config gitignore** (A-812) so spawned consumers can commit the resolved per-skill `config.json` files — then **generates those configs** by wrapping the `initialise-skills` skill (only the neutral `config.example.json` ships in the vendored bundles). Runs **after** the skills pull so configs match the pulled versions.
-- **Re-creates the `GO/NO GO` required-check ruleset** (rulesets are **not** copied by "Use this template") — pinned to the GitHub Actions integration, **with road-runner-bot as a bypass actor** so `pkg-release.yml`'s `changelog-enrich` write-back to `main` succeeds (A-1019; see "CI gate (`GO/NO GO`)" below). See [README → the required-check ruleset](README.md#the-required-check-ruleset).
-- **Ensures the Trunk changelog bypass** (ADR 0004 / A-808) — repo-level `Trunk` ruleset with `road-runner-bot` as a bypass actor so `pkg-release.yml`'s `changelog-enrich` job can push `changelog/**`. Creates `Trunk` when absent.
-- **Creates the `main`-restricted `npm-release` environment** (not copied; without it the OIDC publish has nowhere to deploy from). See [README → the npm-release environment](README.md#the-npm-release-environment).
-- **Enables the Release workflow** (`gh workflow enable Release`, done last — after the environment exists).
-
-The skill **verifies-and-reports** (needs org/browser/cross-repo privilege it can't take on itself), so you finish these by hand:
-
-- **Author the real `src/` API** — replace everything under `src/`; `src/index.ts` is the published entry point. The build/lint/release shell does not change. (Lint configs — `eslint.config.ts` extending `@rheged-studio/eslint-config`, `.markdownlint-cli2.jsonc` extending `@rheged-studio/markdownlint-config` — are inherited as-is; extend `eslint.config.ts` only for the opt-in presets you need: `testing`, `frameworkRouting`, `astro`, `sanity`, `storybook`, `tableComponents`.)
-- **Onboard the release-orchestrator** — the template ships every repo-side prerequisite, and road-runner-bot + `ROADRUNNER_*` are now provisioned org-wide (A-945), so this reduces to a single step: **add the repo to the orchestrator's `matrix.repo`** (A-648). The old per-repo "install road-runner-bot" and "grant `ROADRUNNER_*` selected access" (A-821) steps no longer apply. See [README → release-orchestrator onboarding](README.md#release-orchestrator-onboarding).
-- **Verify the Claude review prerequisites** — `CLAUDE_CODE_OAUTH_TOKEN` secret **and** the Claude GitHub App on the repo (the App install fixes the `git fetch … could not read Username` failure — A-621 / A-636). Preferably both are org-wide, in which case just confirm inheritance. See [README → Claude review prerequisites](README.md#claude-review-prerequisites).
-- **Bootstrap npm OIDC** — the manual first publish (passkey/WebAuthn), then the `v<initial>` git tag + GitHub release (so release-please has a baseline — A-1019), then configuring the Trusted Publisher. See [README → npm OIDC](README.md#npm-oidc-trusted-publishing) and "Bootstrap publish" below.
+**Changelog notes without npm.** `.github/workflows/changelog-enrich.yml` calls
+`reusable-changelog-enrich.yml` with `mode: enrich` (the deploy-target path).
+Merged PRs get `merged_at` / `pr` / `commit` / `stats`; entries stay
+version-less. When npm is enabled: delete that workflow (otherwise it
+double-runs with `pkg-release.yml`'s `mode: finalise` job), remove the `if:`
+gates, `gh workflow enable Release`, and add `matrix.repo`.
 
 ## Decisions live in Linear, not ADRs
 
-Architectural and process decisions for this template — and for every repo spawned from it —
-are recorded as **Linear issues**, not as in-repo ADR files. The issue IDs threaded through
+Architectural and process decisions for this package — and for every repo spawned from
+`npm-package-template` — are recorded as **Linear issues**, not as in-repo ADR files. The issue IDs threaded through
 this document and the code comments (e.g. `A-326`, `A-328`, `A-447`, `A-639`) are the durable
-decision record: follow the ID to Linear for the full rationale. A repo generated from the
-template inherits this convention — capture new decisions as Linear issues and reference their
-IDs in commits, PR bodies, and comments rather than adding a `docs/adr/` tree. The template
-itself is catalogued in the Open Source initiative in Linear (A-238).
+decision record: follow the ID to Linear for the full rationale. Capture new decisions as Linear issues and reference their
+IDs in commits, PR bodies, and comments rather than adding a `docs/adr/` tree.
 
 ## Package manager and Node
 
@@ -144,7 +134,7 @@ To bypass any hook in an emergency: `git commit --no-verify` or `git push --no-v
 `ci.yml` ends with a single **`GO/NO GO`** aggregator job — the one stable, estate-canonical gate the release-orchestrator waits on (A-412/A-424). It `needs:` every real job (`config`, `lint`, `build-test`, `pr-title`, `changelog-completeness`), runs `if: ${{ always() }}`, and a one-line `jq` verdict over `toJSON(needs)` succeeds **iff** every job `result` is `success` or `skipped`. The `lint` and `build-test` jobs are thin callers of the shared reusable workflows (see "Shared reusable CI callers" below); `config` is in `needs` so a config failure — which would skip the callers, and skips are accepted — still fails the gate directly.
 
 - **Why a check-run, not a commit status.** The gate is the job's _intrinsic_ check-run, named `GO/NO GO`. A commit status is writable by any push-scoped token (forgeable); a **check-run can only be minted by a GitHub App** — here, the repo's own Actions run — so a push-scoped token or a fork contributor cannot forge it. Require it on `main` via a **ruleset pinned to the GitHub Actions integration** (`integration_id: 15368`), so nothing but this repo's Actions can satisfy it. Rulesets aren't copied by template generation — see the generation checklist.
-- **road-runner-bot bypass (A-1019).** The `Require GO/NO GO gate` ruleset **must** list road-runner-bot as a bypass actor: `pkg-release.yml`'s `changelog-enrich` job pushes `changelog/**` directly to `main` after each merge and would otherwise be rejected by the required check (`GH013`). Human PRs still have to satisfy `GO/NO GO` — the bypass is scoped to the bot actor. The `Trunk` ruleset carries the same bypass for its pull-request/deletion/non-fast-forward rules. See [README → the required-check ruleset](README.md#the-required-check-ruleset).
+- **road-runner-bot bypass (A-1019).** The `Require GO/NO GO gate` ruleset **must** list road-runner-bot as a bypass actor: `pkg-release.yml`'s `changelog-enrich` job pushes `changelog/**` directly to `main` after each merge and would otherwise be rejected by the required check (`GH013`). Human PRs still have to satisfy `GO/NO GO` — the bypass is scoped to the bot actor. The `Trunk` ruleset carries the same bypass for its pull-request/deletion/non-fast-forward rules. The ruleset lives in repo settings (`github-settings.mjs`); it is not copied by template generation.
 - **Footguns (A-418).** The gate must **never** be path-filtered (a path-filtered required check sits Pending forever and blocks merges); `always()` is mandatory or the aggregator skips and never reports; the literal `/` and space must surface as `check_run.name == "GO/NO GO"` (they do — emoji/spaces already survive in `lint / Lint`). Fall back to explicit-create (`POST /check-runs`, Option A) only if the `/` ever misbehaves.
 - **Gate name (A-419 / A-596 / A-437).** Clacks polls the `GO/NO GO` check-run only. A-419 opened a dual-accept window (`🔬 Build & Lint` **or** `GO/NO GO`); A-596 collapsed it to `GO/NO GO`-only once every served repo emitted it, and A-437 retired the old gate role. The caller swap (A-447) had already **removed** the `🔬 Build & Lint` context from this template — replaced by `lint / Lint` + `build-test / Build & Test`. Safe on _this_ repo regardless: Release is disabled, so nothing here waits on the orchestrator. `pr-title`'s name is _also_ the estate-pinned required-check context (A-405); don't tidy it.
 - **Done (A-411 / A-447).** The `lint` and `build-test` jobs are now thin callers of `rheged-studio/shared-workflows`'s reusable `reusable-lint.yml` / `reusable-build-test.yml` (A-415/416). `pr-title` stays inline (its own track, A-428/A-403) and `release` stays inline (no reusable workflow yet, A-417). `GO/NO GO` stays put across the swap, which is exactly why it lives here (custom per-repo) and not upstream.
@@ -248,22 +238,21 @@ When adding workflow-extracted tooling, write the test first, then wire from YAM
 
 ## Dated changelog (`changelog/`)
 
-The `changelog/` directory is the **only** changelog in the repo — there is no root `CHANGELOG.md` (release-please runs with `skip-changelog`, A-371). It keeps **one dated Markdown file per PR** — a browsable, per-change, machine-readable record (the `version` field, stamped at release only on release-triggering entries, ties an entry back to the published release it shipped in). The reusable release workflow (called by `pkg-release.yml`) sources its GitHub-release notes from the version-stamped entries. Full schema and lifecycle in **`changelog/README.md`**. The template ships only that README; the first real entry is written by `/send-it`.
+The `changelog/` directory is the **only** changelog in the repo — there is no root `CHANGELOG.md` (release-please runs with `skip-changelog`, A-371). It keeps **one dated Markdown file per PR**. Full schema and lifecycle in **`changelog/README.md`**.
 
 Two-stage lifecycle — post-merge enrichment runs in-repo via
-`reusable-changelog-enrich.yml` on every push to `main` (A-808 / A-821); the
-orchestrator's inline finalise is retired later (A-801).
+`reusable-changelog-enrich.yml` on every push to `main` (A-808 / A-821):
 
-1. **PR-time** — `/send-it` writes `changelog/<YYYYMMDD-HHMMSS>-<slug>.md` with the PR-time fields (and empty enrichment placeholders) for **every** PR under the v1.1.0 "record everything, filter later" model — a non-release entry simply stays version-less and is filtered out of release notes. The entry merges to `main` with its PR and sits with placeholders until post-merge enrich / release finalise. CI's changelog-completeness gate enforces the one hard coupling: a release-triggering `feat`/`fix`/breaking PR title **must** carry an entry.
-2. **Post-merge / release** — `pkg-release.yml`'s `changelog-enrich` job (`mode: finalise`) resolves the just-merged PR, fills `merged_at`/`commit`/`pr`/`stats` via `changelog-core enrich`, and stamps `version` via `changelog-core finalise` only when `package.json`'s version has no matching git tag (release-please cut). Write-back pushes only `changelog/**` as `road-runner-bot[bot]` (ADR 0004). Dormant on this template while Release is disabled; generated packages inherit the job when they enable Release.
+1. **PR-time** — `/send-it` writes `changelog/<YYYYMMDD-HHMMSS>-<slug>.md` with the PR-time fields (and empty enrichment placeholders) for **every** PR. The entry merges to `main` with its PR and sits with placeholders until post-merge enrich.
+2. **Post-merge (this repo, today)** — `.github/workflows/changelog-enrich.yml` (`mode: enrich`) resolves the just-merged PR and fills `merged_at`/`commit`/`pr`/`stats`. It does **not** stamp `version`. Write-back pushes only `changelog/**` as `road-runner-bot[bot]` (ADR 0004). When npm publish is enabled, switch to `pkg-release.yml`'s `mode: finalise` job and delete the dedicated enrich workflow.
 
 `validate:changelog` (`pnpm exec changelog-core validate`) enforces the schema (CI: the `lint` reusable caller's changelog lane). Required frontmatter is relaxed to `title`/`created_at`/`category`/`breaking` so backfilled historical entries and in-flight entries both pass.
 
 ## Release workflow
 
-> **Disabled on this template repo.** The template's `src/` is a placeholder that is never published, so the Release workflow is switched off here (`gh workflow disable Release`) to avoid a failing publish — and an auto-opened failure issue — on every push to `main`. The workflow file stays in the tree because it is part of the shell that generated packages inherit; only its execution on _this_ repo is suppressed. Re-enable with `gh workflow enable Release` (and in any repo generated from this template — see the generation checklist at the top). Everything below describes the workflow as it runs in a real, publishing package.
+> **Dormant until npm bootstrap.** This package is not published. `pkg-release.yml` jobs are gated on repository variable `ENABLE_NPM_PUBLISH` (and should also be disabled with `gh workflow disable Release`) so a push to `main` cannot publish or open a failure issue. The file stays in the tree so Trusted Publishing can later bind to this filename. Changelog notes use `.github/workflows/changelog-enrich.yml` instead. Everything below describes the workflow **as it will run once npm is enabled**.
 >
-> **Thin caller (A-639).** The release workflow is `.github/workflows/pkg-release.yml` — a thin caller of the estate's shared `reusable-pkg-release.yml` (SHA-pinned to v1.0.2), mirroring eslint-config. A `config` job loads `infrastructure/repo-config.yaml` and passes `npm-scope` / `node-version-file` / the registry URLs to the reusable workflow, which holds all the release logic described below. The file is `pkg-release.yml` (npm Trusted Publishing binds its OIDC subject to repository + workflow **filename**, so configure the Trusted Publisher against `pkg-release.yml`), but the workflow **name** stays `Release` so `gh workflow enable/disable Release` still works.
+> **Thin caller (A-639).** The release workflow is `.github/workflows/pkg-release.yml` — a thin caller of the estate's shared `reusable-pkg-release.yml`. A `config` job loads `infrastructure/repo-config.yaml` and passes `npm-scope` / `node-version-file` / the registry URLs to the reusable workflow. The file is `pkg-release.yml` (npm Trusted Publishing binds its OIDC subject to repository + workflow **filename**), but the workflow **name** stays `Release` so `gh workflow enable/disable Release` still works.
 
 There are two release modes — know which one you're in.
 
@@ -280,7 +269,7 @@ Once the package exists on npm AND its Trusted Publisher is configured against t
 **Cross-boundary hardening (A-326).** npm Trusted Publishing binds its OIDC subject to repository + workflow filename only — not the trigger event, ref, or actor — so anything able to run `pkg-release.yml` against an arbitrary ref could mint a valid publish credential. Three layers close that — one in the caller, one in repo settings, one upstream in the reusable workflow:
 
 - **No `workflow_dispatch` (in the caller).** `pkg-release.yml`'s only trigger is `push: [main]`; re-run a failed release via "Re-run jobs" on the original push run. This lives in the caller — the reusable workflow can't stop a caller adding `workflow_dispatch`, so keep it out of `pkg-release.yml`.
-- **Branch-restricted `npm-release` environment (repo settings).** Both privileged jobs in the reusable workflow (`release` and `publish-github-packages`) run under the `npm-release` environment, which permits deployments **only from `refs/heads/main`** (deployment-branch policy), so a non-main ref is rejected before the OIDC token is mintable. **No required reviewers** — releases stay hands-off; this is a structural ref gate, not a manual approval. The environment is configured in repo settings (not in YAML): `gh api -X PUT repos/rheged-studio/npm-package-template/environments/npm-release` with `deployment_branch_policy.custom_branch_policies=true`, then a single `main` branch policy.
+- **Branch-restricted `npm-release` environment (repo settings).** Both privileged jobs in the reusable workflow (`release` and `publish-github-packages`) run under the `npm-release` environment, which permits deployments **only from `refs/heads/main`** (deployment-branch policy), so a non-main ref is rejected before the OIDC token is mintable. **No required reviewers** — releases stay hands-off; this is a structural ref gate, not a manual approval. The environment is configured in repo settings (not in YAML): `gh api -X PUT repos/rheged-studio/nx-plugin/environments/npm-release` with `deployment_branch_policy.custom_branch_policies=true`, then a single `main` branch policy.
 - **Explicit ref guard (in the reusable workflow).** Every publish/tag step and the GitHub Packages job `if:` also carries `github.event_name == 'push' && github.ref == 'refs/heads/main' && …`. Redundant with the environment, but kept as the in-workflow structural defence. It lives upstream in `reusable-pkg-release.yml`, so a generated-repo operator verifies it there, not in the caller.
 
 **Build once, publish the exact artifact (A-328).** Build-time code (`pnpm install` + `tsc` + `npm pack`) runs **only** in the unprivileged `build` job (`contents: read`, no `id-token`/`packages`/`contents: write`). Both publish legs download and ship that one tarball, so a compromised build-time dependency never runs alongside a mintable publish credential, and the npm tarball, the GitHub Packages tarball, and the attested digest are guaranteed byte-identical.
@@ -296,7 +285,7 @@ The publish + tag steps run **only when the version-vs-tag gate reports a freshl
 
 - **Separate `publish-github-packages` job**, gated `needs: release` + `if: needs.release.outputs.should_publish == 'true'` **plus the same main-only ref guard + `npm-release` environment** (A-326). `packages: write` is scoped to this job only — never to the `release` job that holds `id-token: write` for npm OIDC.
 - **Auth is the ephemeral per-job `GITHUB_TOKEN`** — the most secure option GitHub Packages offers (no OIDC Trusted-Publisher flow exists for it; no standing secret).
-- **Provenance via GitHub-native attestation.** `npm publish --provenance` is npmjs.org-only, so the job runs `actions/attest-build-provenance` over the exact tarball it publishes — the attested digest matches both the npm tarball and what consumers download (`gh attestation verify <tarball> --repo rheged-studio/npm-package-template`).
+- **Provenance via GitHub-native attestation.** `npm publish --provenance` is npmjs.org-only, so the job runs `actions/attest-build-provenance` over the exact tarball it publishes — the attested digest matches both the npm tarball and what consumers download (`gh attestation verify <tarball> --repo rheged-studio/nx-plugin`).
 - The GitHub Packages publish is idempotent (skips on `npm view` hit, distinguishes 404 from real errors) and **hard-codes the publish target to `https://npm.pkg.github.com`, aborting if the registry URL drifts from it** (A-330) — the ephemeral `GITHUB_TOKEN` is a bearer credential, so the host must never be redirectable by a config edit. The template's `infrastructure/scripts/publish-to-github-packages.sh` is the unit-tested **reference** for that logic (now inlined in the reusable workflow, no longer CI-invoked).
 
 > **Watch-item:** the npm leg's git tag + GitHub release are created explicitly in the reusable workflow's `release` job (`npm publish` creates neither on its own), sourcing the notes from the matching dated `changelog/` entries. Confirm that step still runs on each release.
