@@ -20,3 +20,5 @@ issues: []
 - Pulled the locked shared agent-skills set and generated committed per-skill `config.json` files.
 - Added `.github/workflows/changelog-enrich.yml` (`mode: enrich`) so merged PRs get post-merge changelog metadata without a version stamp.
 - Gated `pkg-release.yml` jobs on repository variable `ENABLE_NPM_PUBLISH` so a still-active Release workflow cannot publish or stamp `0.0.0`. npm publish, Clacks `matrix.repo`, and GitHub Releases stay deferred.
+- Skip `.github/workflows/changelog-enrich.yml` when `ENABLE_NPM_PUBLISH` is `'true'`, so enrich and finalise cannot both write `changelog/**` during a half-flipped npm enable.
+- Point `CLAUDE.md` `npm-release` / attestation commands at `rheged-studio/nx-plugin` and drop the dead `README.md#the-required-check-ruleset` link.

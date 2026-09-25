@@ -7,7 +7,9 @@ name: Changelog enrich
 # write-back requires secrets: inherit (ROADRUNNER_PRIVATE_KEY).
 #
 # When npm publish is enabled: delete this workflow (pkg-release.yml already
-# carries `mode: finalise`) so the two do not double-run.
+# carries `mode: finalise`) so the two do not double-run. The job `if:` is the
+# reciprocal of pkg-release.yml's ENABLE_NPM_PUBLISH gate so a half-flipped
+# transition cannot run enrich and finalise together.
 on:
   push:
     branches:
@@ -21,6 +23,7 @@ permissions: {}
 
 jobs:
   changelog-enrich:
+    if: ${{ vars.ENABLE_NPM_PUBLISH != 'true' }}
     uses: rheged-studio/shared-workflows/.github/workflows/reusable-changelog-enrich.yml@v1
     with:
       mode: enrich
