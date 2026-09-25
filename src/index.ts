@@ -1,8 +1,7 @@
 /**
- * Placeholder entry point for the package template.
+ * Placeholder entry point for `@rheged-studio/nx-plugin`.
  *
- * Everything under `src/` belongs to the generated package — replace this file
- * with the package's real public API. The surrounding shell (build, lint,
- * release workflows) does not need to change when you do.
+ * Replace this file with the package's real public API (Nx generators). The
+ * surrounding shell (build, lint, CI) does not need to change when you do.
  */
-export const PACKAGE_NAME = "@rheged-studio/npm-package-template";
+export const PACKAGE_NAME = "@rheged-studio/nx-plugin";
