@@ -3,15 +3,19 @@ title: Initialise nx-plugin as an estate package without npm publish
 release_note: ""
 version:
 created_at: "2026-09-25T10:13:54Z"
-merged_at:
+merged_at: "2026-09-25T11:28:23Z"
 branch: cursor/initialise-nx-plugin-5d6e
-pr:
-commit:
+pr: 7
+commit: f2e780e
 author: cursoragent@cursor.com
 co_authors: []
 category: chore
 breaking: false
 issues: []
+stats:
+  loc_added: 1095
+  loc_removed: 1996
+  files_changed: 90
 ---
 
 ## Changed
