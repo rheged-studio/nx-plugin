@@ -47,13 +47,13 @@
       "source": "rheged-studio/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/send-it/SKILL.md",
-      "computedHash": "d019c5ae9c08c3d6b2c8d82142019e3a3285a4eb97ff57da90c8b31e6f2aa569"
+      "computedHash": "bd407dc8b25926aa7e75449abd88a4833f59ee623662d6696732945442677df7"
     },
     "triage-pr": {
       "source": "rheged-studio/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/triage-pr/SKILL.md",
-      "computedHash": "66000a6dec99e08af1a59796ed48d54f66ee5bdff47827323cc1aa17832c318d"
+      "computedHash": "47a5bd337f04624dc434a53417ddb5083efad0d7923a542b46994abfc2497ad5"
     }
   }
 }

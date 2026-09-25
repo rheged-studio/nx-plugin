@@ -49,14 +49,14 @@ existing `config.json` (which may be absent on a fresh install). Each key is the
 classified by a three-way comparison — example placeholder vs existing value vs
 detected value:
 
-| Status               | Meaning                                                      | Action                          |
-| -------------------- | ------------------------------------------------------------ | ------------------------------- |
-| `inferred`           | No value yet, or still the example placeholder               | Write the detected value        |
-| `unchanged`          | Existing value already equals what we detected               | No-op                           |
-| `drift`              | A real value that differs from detection — a deliberate edit | **Keep it**; report both values |
-| `needs-manual-input` | No detector and no value (e.g. a Linear slug with no MCP)    | Leave for you to supply         |
-| `manual-kept`        | A real value we have no detector for                         | Keep it                         |
-| `unknown-kept`       | A key in `config.json` no skill template knows about         | Keep it, untouched              |
+| Status | Meaning | Action |
+| --- | --- | --- |
+| `inferred` | No value yet, or still the example placeholder | Write the detected value |
+| `unchanged` | Existing value already equals what we detected | No-op |
+| `drift` | A real value that differs from detection — a deliberate edit | **Keep it**; report both values |
+| `needs-manual-input` | No detector and no value (e.g. a Linear slug with no MCP) | Leave for you to supply |
+| `manual-kept` | A real value we have no detector for | Keep it |
+| `unknown-kept` | A key in `config.json` no skill template knows about | Keep it, untouched |
 
 Detection is keyed by config-**key name**, not by skill, so one detector serves
 every skill that uses a key (one `baseBranch` detector covers `changelog`,
@@ -105,11 +105,8 @@ at the repo root — a machine-readable inventory of which skill versions are in
 and where they came from:
 
 ```json
-{
-  "source": "https://github.com/rheged-studio/agent-skills",
-  "ref": "main",
-  "skills": { "changelog": "1.2.0", "send-it": "2.1.3", "…": "…" }
-}
+{ "source": "https://github.com/rheged-studio/agent-skills", "ref": "main",
+  "skills": { "changelog": "1.2.0", "send-it": "2.1.3", "…": "…" } }
 ```
 
 - **`skills`** — a full inventory of every installed bundle (including `preflight`
