@@ -3,16 +3,20 @@ title: Re-vendor agent skills for mattpocock/skills 1.3.1
 release_note: ""
 version:
 created_at: "2026-10-08T16:15:00Z"
-merged_at:
+merged_at: "2026-10-08T16:04:00Z"
 branch: a-2319-re-vendor-skills-for-v131-nx-plugin
-pr:
-commit:
+pr: 11
+commit: 11055fe
 author: rob@rheged.studio
 co_authors: []
 category: chore
 breaking: false
 issues:
   - A-2319
+stats:
+  loc_added: 6532
+  loc_removed: 1763
+  files_changed: 124
 ---
 
 ## Changed
