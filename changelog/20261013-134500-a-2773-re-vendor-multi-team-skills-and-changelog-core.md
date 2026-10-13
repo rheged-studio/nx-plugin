@@ -12,8 +12,8 @@ co_authors: []
 category: chore
 breaking: false
 issues:
-  - A-2773
-  - A-2730
+  - R-2773
+  - R-2730
 stats:
   loc_added: 2302
   loc_removed: 704

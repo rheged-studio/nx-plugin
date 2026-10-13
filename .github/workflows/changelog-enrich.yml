@@ -1,7 +1,7 @@
 name: Changelog enrich
 
 # Post-merge dated-changelog enrich without npm publish (deploy-target path,
-# A-800 / A-821). `mode: enrich` fills merged_at/pr/commit/stats and does **not**
+# R-800 / R-821). `mode: enrich` fills merged_at/pr/commit/stats and does **not**
 # stamp `version` — `pkg-release.yml`'s `mode: finalise` job would stamp the
 # untagged 0.0.0 onto every entry. Never pull_request_target. App-token
 # write-back requires secrets: inherit (ROADRUNNER_PRIVATE_KEY).
