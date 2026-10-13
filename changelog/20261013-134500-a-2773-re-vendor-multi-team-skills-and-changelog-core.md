@@ -3,10 +3,10 @@ title: Re-vendor multi-team skills and changelog-core 1.2.0
 release_note: ""
 version:
 created_at: "2026-10-13T13:45:00Z"
-merged_at:
+merged_at: "2026-10-13T13:31:51Z"
 branch: a-2773-nx-plugin-re-vendor-the-multi-team-skills-and-changelog-core
-pr:
-commit:
+pr: 13
+commit: 44c6b3b
 author: rob@rheged.studio
 co_authors: []
 category: chore
@@ -15,9 +15,9 @@ issues:
   - A-2773
   - A-2730
 stats:
-  loc_added: 0
-  loc_removed: 0
-  files_changed: 0
+  loc_added: 2302
+  loc_removed: 704
+  files_changed: 83
 ---
 
 ## Changed
