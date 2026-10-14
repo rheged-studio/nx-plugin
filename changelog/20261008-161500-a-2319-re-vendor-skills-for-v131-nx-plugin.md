@@ -12,7 +12,7 @@ co_authors: []
 category: chore
 breaking: false
 issues:
-  - A-2319
+  - R-2319
 stats:
   loc_added: 6532
   loc_removed: 1763

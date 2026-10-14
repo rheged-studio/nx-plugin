@@ -1,5 +1,5 @@
 // Unit tests for the initialise-package-repo skill's GitHub-settings logic
-// (A-663 / A-808 / A-1019). A fake runner records the `gh` argv and returns canned
+// (R-663 / R-808 / R-1019). A fake runner records the `gh` argv and returns canned
 // API responses, so we assert both the idempotent "already present → no mutation"
 // path and the "absent → correct gh api call" path without touching a real repo.
 
@@ -169,7 +169,7 @@ describe("goNoGoRulesetPayload", () => {
     ]);
   });
 
-  it("carries the road-runner-bot bypass (A-1019)", () => {
+  it("carries the road-runner-bot bypass (R-1019)", () => {
     // changelog-enrich pushes changelog/** to main as road-runner-bot and must
     // clear the required check — same bypass parity as Trunk / versioned template.
     expect(goNoGoRulesetPayload().bypass_actors).toEqual([

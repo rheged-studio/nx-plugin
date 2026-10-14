@@ -11,7 +11,7 @@ co_authors: []
 category: chore
 breaking: false
 issues:
-  - A-1923
+  - R-1923
 affected_packages: []
 stats:
   files_changed: 220
@@ -22,6 +22,6 @@ stats:
 
 ## Changed
 
-- Installed the estate skill catalogue via `rheged-skills-setup --install --write` (Rheged ship set, Matt Pocock packs, and `rheged-skills-setup`), with configs restored from HEAD (A-706).
+- Installed the estate skill catalogue via `rheged-skills-setup --install --write` (Rheged ship set, Matt Pocock packs, and `rheged-skills-setup`), with configs restored from HEAD (R-706).
 - Removed legacy `initialise-skills` in favour of `rheged-skills-setup`.
 - Kept repo-specific `initialise-package-repo` and refreshed `.claude/skills.lock` / `skills-lock.json`.
