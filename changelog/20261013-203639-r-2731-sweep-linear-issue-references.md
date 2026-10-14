@@ -3,10 +3,10 @@ title: Sweep Linear issue references to R and C keys
 release_note: ""
 version:
 created_at: "2026-10-13T20:36:39Z"
-merged_at:
+merged_at: "2026-10-14T08:06:55Z"
 branch: r-2731-nx-plugin-sweep-issue-references
-pr:
-commit:
+pr: 16
+commit: 8e70743
 author: rob@rheged.studio
 co_authors: []
 category: chore
@@ -14,9 +14,9 @@ breaking: false
 issues:
   - R-2731
 stats:
-  loc_added:
-  loc_removed:
-  files_changed:
+  loc_added: 153
+  loc_removed: 128
+  files_changed: 33
 ---
 
 ## Changed
